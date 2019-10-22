@@ -9,6 +9,15 @@
  */
 
 /* XXX: https://uva.onlinejudge.org/index.php?option=com_onlinejudge&Itemid=8&page=show_problem&problem=3937 */
+// XXX: https://blogs.msdn.microsoft.com/devdev/2006/06/19/factoring-large-numbers-with-quadratic-sieve/
+// XXX: https://btravers.weebly.com/uploads/6/7/2/9/6729909/quadratic_sieve_slides.pdf
+// XXX: https://howlingpixel.com/i-en/Quadratic_sieve
+// XXX: http://www.damianball.com/pdf/portfolio/quadratic-sieve.pdf
+// XXX: https://planetmath.org/quadraticsieve
+// XXX: http://www.cs.virginia.edu/crab/QFS_Simple.pdf
+// XXX: http://micsymposium.org/mics_2011_proceedings/mics2011_submission_28.pdf
+// XXX: https://www.math.colostate.edu/~hulpke/lectures/m400c/quadsievex.pdf
+// XXX: https://math.stackexchange.com/questions/2918263/basics-of-quadratic-sieve-algorithm?rq=1
 #if 1
 #define _GNU_SOURCE
 #include <stdio.h>
@@ -746,10 +755,11 @@ COMUN_FUNC_STATICA natural stars_calcula_potencia_primo(
     return i;
 }
 
+#define STARS_INTENTOS_ES_PRIMO 10
 COMUN_FUNC_STATICA bool stars_es_cuadratico(entero_largo_sin_signo n,
                                             entero_largo_sin_signo *raiz) {
     entero_largo_sin_signo sqr = sqrt(n);
-    bool r = (sqr * sqr == n) && primalidad_es_primo(sqr, 300);
+    bool r = (sqr * sqr == n) && primalidad_es_primo(sqr, STARS_INTENTOS_ES_PRIMO);
     *raiz = 0;
     comun_log_debug("n %llu sqr %llu", n, sqr);
     if (raiz) {
@@ -774,7 +784,7 @@ COMUN_FUNC_STATICA entero_largo_sin_signo stars_calcula_contribucion_primos_meno
     *factor_primos_mayores= COMUN_VALOR_INVALIDO;
     *idx_inicio_primos_mayores=COMUN_VALOR_INVALIDO;
     comun_log_debug("libre de cua de %llu", n);
-    if (n == 1 || primalidad_es_primo(n, 300)) {
+    if (n == 1 || primalidad_es_primo(n, STARS_INTENTOS_ES_PRIMO)) {
         if (n != 1) {
             r = n - 1;
         } else {
@@ -825,7 +835,7 @@ COMUN_FUNC_STATICA int stars_core(entero_largo_sin_signo n, primos_datos *pd,
     
     contribucion_primos_menores=stars_calcula_contribucion_primos_menores(n, &factor_primos_mayores, pd,&idx_inicio_primos_mayores);
     
-    if (primalidad_es_primo(factor_primos_mayores, 300)) {
+    if (primalidad_es_primo(factor_primos_mayores, STARS_INTENTOS_ES_PRIMO)) {
         contribucion_primos_mayores=factor_primos_mayores-1;
     } else {
         if(factor_primos_mayores<PRIMOS_NUM_MAX){
